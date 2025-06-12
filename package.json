@@ -1,13 +1,10 @@
 {
   "name": "insta-dl-vercel",
   "version": "1.0.0",
-  "main": "api/insta.js",
-  "scripts": {
-    "dev": "vercel dev",
-    "start": "vercel dev"
-  },
+  "main": "index.js",
+  "license": "MIT",
   "dependencies": {
-    "chrome-aws-lambda": "^10.1.0",
-    "puppeteer-core": "^10.1.0"
+    "@sparticuz/chromium": "^109.0.5",
+    "puppeteer-core": "^21.9.0"
   }
 }

@@ -1,17 +1,22 @@
-const chromium = require("@sparticuz/chromium");
-const puppeteer = require("puppeteer-core");
+import chromium from "@sparticuz/chromium";
+import puppeteer from "puppeteer-core";
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   const { url } = req.query;
 
   if (!url) return res.status(400).json({ error: "Missing URL" });
 
   let browser = null;
+
   try {
+    const executablePath = await chromium.executablePath();
+
     browser = await puppeteer.launch({
       args: chromium.args,
-      executablePath: await chromium.executablePath(),
+      defaultViewport: chromium.defaultViewport,
+      executablePath,
       headless: chromium.headless,
+      ignoreHTTPSErrors: true,
     });
 
     const page = await browser.newPage();
@@ -24,7 +29,7 @@ module.exports = async (req, res) => {
     await browser.close();
 
     if (!videoUrl) {
-      return res.status(500).json({ error: "Failed to extract video" });
+      return res.status(500).json({ error: "Video not found" });
     }
 
     return res.status(200).json({ status: true, url: videoUrl });
@@ -32,4 +37,4 @@ module.exports = async (req, res) => {
     if (browser) await browser.close();
     return res.status(500).json({ error: err.message });
   }
-};
+}
